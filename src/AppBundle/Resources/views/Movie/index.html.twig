@@ -1,26 +1,20 @@
 {% extends '::base.html.twig' %}
 
 {% block body -%}
-    <h1>Lista filmów</h1>
+    <div class="contentTitle"> <h1>Lista filmów</h1> </div>
 
         {% for entity in entities %}
-            <tr>
-                <td><a href="{{ path('_show', { 'id': entity.id }) }}">{{ entity.id }}</a></td>
-                <td>{{ entity.title }}</td>
-                <td>{{ entity.img }}</td>
-                <td>{{ entity.price }}</td>
-                <td>{% if entity.date %}{{ entity.date|date('Y-m-d H:i:s') }}{% endif %}</td>
-                <td>
-                <ul>
-                    <li>
-                        <a href="{{ path('_show', { 'id': entity.id }) }}">show</a>
-                    </li>
-                    <li>
-                        <a href="{{ path('_edit', { 'id': entity.id }) }}">edit</a>
-                    </li>
-                </ul>
-                </td>
-            </tr>
+            <div class="contentTitle"><h1>{{ entity.title }}</h1></div>
+            <div class="contentText">
+                <div style="display:inline-block; vertical-align:top"><img style="width:150px" src="{{ asset(entity.img) }}"></div>
+                <div style="display:inline-block; vertical-align:top">
+                    <p>Opis: {{ entity.description}}</p>
+                    <p>Cena: {{ entity.price }}</p>
+                    <p>Dodane dnia: {% if entity.date %}{{ entity.date|date('Y-m-d H:i:s') }}{% endif %}</p>
+                    <p><a>Zakup</a></p>
+                </div>
+            </div>
+
         {% endfor %}
   
     {% endblock %}

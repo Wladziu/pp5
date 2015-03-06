@@ -1,15 +1,9 @@
 {% extends '::base.html.twig' %}
 
 {% block body -%}
-    <h1>Movie creation</h1>
-
+     <div class="contentTitle"><h1>Movie creation</h1></div>
+  <div class="contentText">
     {{ form(form) }}
 
-        <ul class="record_actions">
-    <li>
-        <a href="{{ path('') }}">
-            Back to the list
-        </a>
-    </li>
-</ul>
+</div>
 {% endblock %}

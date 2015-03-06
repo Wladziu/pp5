@@ -34,7 +34,12 @@ class Movie
      * @ORM\Column(name="img", type="string", length=700)
      */
     private $img;
-
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="description", type="text")
+     */
+    private $description;
     /**
      * @var string
      *
@@ -50,6 +55,10 @@ class Movie
     private $date;
 
 
+    public function __construct()
+    {
+        $this->date = new \DateTime();
+    }
     /**
      * Get id
      *
@@ -58,6 +67,10 @@ class Movie
     public function getId()
     {
         return $this->id;
+    }
+    public function getDescription()
+    {
+        return $this->description;
     }
 
     /**
@@ -72,7 +85,12 @@ class Movie
 
         return $this;
     }
+    public function setDescription($title)
+    {
+        $this->description = $title;
 
+        return $this;
+    }
     /**
      * Get title
      *
