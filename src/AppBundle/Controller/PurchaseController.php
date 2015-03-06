@@ -7,21 +7,22 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use AppBundle\Entity\Purchase;
 use AppBundle\Entity\Movie;
-use AppBundle\Form\MovieType;
+use AppBundle\Form\PurchaseType;
 
 /**
- * Movie controller.
+ * Purchase controller.
  *
- * @Route("/")
+ * @Route("/purchase")
  */
-class MovieController extends Controller
+class PurchaseController extends Controller
 {
 
     /**
-     * Lists all Movie entities.
+     * Lists all Purchase entities.
      *
-     * @Route("/", name="")
+     * @Route("/", name="purchase")
      * @Method("GET")
      * @Template()
      */
@@ -29,22 +30,23 @@ class MovieController extends Controller
     {
         $em = $this->getDoctrine()->getManager();
 
-        $entities = $em->getRepository('AppBundle:Movie')->findAll();
+        $entities = $em->getRepository('AppBundle:Purchase')->findAll();
+
 
         return array(
             'entities' => $entities,
         );
     }
     /**
-     * Creates a new Movie entity.
+     * Creates a new Purchase entity.
      *
-     * @Route("/", name="_create")
+     * @Route("/", name="purchase_create")
      * @Method("POST")
-     * @Template("AppBundle:Movie:new.html.twig")
+     * @Template("AppBundle:Purchase:new.html.twig")
      */
     public function createAction(Request $request)
     {
-        $entity = new Movie();
+        $entity = new Purchase();
         $form = $this->createCreateForm($entity);
         $form->handleRequest($request);
 
@@ -53,7 +55,7 @@ class MovieController extends Controller
             $em->persist($entity);
             $em->flush();
 
-            return $this->redirect($this->generateUrl('', array('id' => $entity->getId())));
+            return $this->redirect($this->generateUrl('purchase_show', array('id' => $entity->getId())));
         }
 
         return array(
@@ -63,46 +65,52 @@ class MovieController extends Controller
     }
 
     /**
-     * Creates a form to create a Movie entity.
+     * Creates a form to create a Purchase entity.
      *
-     * @param Movie $entity The entity
+     * @param Purchase $entity The entity
      *
      * @return \Symfony\Component\Form\Form The form
      */
-    private function createCreateForm(Movie $entity)
+    private function createCreateForm(Purchase $entity)
     {
-        $form = $this->createForm(new MovieType(), $entity, array(
-            'action' => $this->generateUrl('_create'),
+        $form = $this->createForm(new PurchaseType(), $entity, array(
+            'action' => $this->generateUrl('purchase_create'),
             'method' => 'POST',
         ));
 
-        $form->add('submit', 'submit', array('label' => 'Dodaj film'));
+        $form->add('submit', 'submit', array('label' => 'Zapłać'));
 
         return $form;
     }
 
     /**
-     * Displays a form to create a new Movie entity.
+     * Displays a form to create a new Purchase entity.
      *
-     * @Route("/new", name="_new")
+     * @Route("/new/{id}", name="purchase_new")
      * @Method("GET")
      * @Template()
      */
-    public function newAction()
+    public function newAction($id)
     {
-        $entity = new Movie();
-        $form   = $this->createCreateForm($entity);
+        $em = $this->getDoctrine()->getManager();
 
+        $movie = $em->getRepository('AppBundle:Movie')->findOneById($id);
+        $entity = new Purchase();
+        $entity->setMovietitle($movie->getTitle());
+        $entity->setUsername($this->getUser()->getUsername());
+        $form   = $this->createCreateForm($entity);
+        
         return array(
             'entity' => $entity,
+            //'movie' => $movie,
             'form'   => $form->createView(),
         );
     }
 
     /**
-     * Finds and displays a Movie entity.
+     * Finds and displays a Purchase entity.
      *
-     * @Route("/movie/{id}", name="_show")
+     * @Route("/{id}", name="purchase_show")
      * @Method("GET")
      * @Template()
      */
@@ -110,10 +118,10 @@ class MovieController extends Controller
     {
         $em = $this->getDoctrine()->getManager();
 
-        $entity = $em->getRepository('AppBundle:Movie')->find($id);
+        $entity = $em->getRepository('AppBundle:Purchase')->find($id);
 
         if (!$entity) {
-            throw $this->createNotFoundException('Unable to find Movie entity.');
+            throw $this->createNotFoundException('Unable to find Purchase entity.');
         }
 
         $deleteForm = $this->createDeleteForm($id);
@@ -125,9 +133,9 @@ class MovieController extends Controller
     }
 
     /**
-     * Displays a form to edit an existing Movie entity.
+     * Displays a form to edit an existing Purchase entity.
      *
-     * @Route("/{id}/edit", name="_edit")
+     * @Route("/{id}/edit", name="purchase_edit")
      * @Method("GET")
      * @Template()
      */
@@ -135,10 +143,10 @@ class MovieController extends Controller
     {
         $em = $this->getDoctrine()->getManager();
 
-        $entity = $em->getRepository('AppBundle:Movie')->find($id);
+        $entity = $em->getRepository('AppBundle:Purchase')->find($id);
 
         if (!$entity) {
-            throw $this->createNotFoundException('Unable to find Movie entity.');
+            throw $this->createNotFoundException('Unable to find Purchase entity.');
         }
 
         $editForm = $this->createEditForm($entity);
@@ -152,16 +160,16 @@ class MovieController extends Controller
     }
 
     /**
-    * Creates a form to edit a Movie entity.
+    * Creates a form to edit a Purchase entity.
     *
-    * @param Movie $entity The entity
+    * @param Purchase $entity The entity
     *
     * @return \Symfony\Component\Form\Form The form
     */
-    private function createEditForm(Movie $entity)
+    private function createEditForm(Purchase $entity)
     {
-        $form = $this->createForm(new MovieType(), $entity, array(
-            'action' => $this->generateUrl('_update', array('id' => $entity->getId())),
+        $form = $this->createForm(new PurchaseType(), $entity, array(
+            'action' => $this->generateUrl('purchase_update', array('id' => $entity->getId())),
             'method' => 'PUT',
         ));
 
@@ -170,20 +178,20 @@ class MovieController extends Controller
         return $form;
     }
     /**
-     * Edits an existing Movie entity.
+     * Edits an existing Purchase entity.
      *
-     * @Route("/{id}", name="_update")
+     * @Route("/{id}", name="purchase_update")
      * @Method("PUT")
-     * @Template("AppBundle:Movie:edit.html.twig")
+     * @Template("AppBundle:Purchase:edit.html.twig")
      */
     public function updateAction(Request $request, $id)
     {
         $em = $this->getDoctrine()->getManager();
 
-        $entity = $em->getRepository('AppBundle:Movie')->find($id);
+        $entity = $em->getRepository('AppBundle:Purchase')->find($id);
 
         if (!$entity) {
-            throw $this->createNotFoundException('Unable to find Movie entity.');
+            throw $this->createNotFoundException('Unable to find Purchase entity.');
         }
 
         $deleteForm = $this->createDeleteForm($id);
@@ -193,7 +201,7 @@ class MovieController extends Controller
         if ($editForm->isValid()) {
             $em->flush();
 
-            return $this->redirect($this->generateUrl('_edit', array('id' => $id)));
+            return $this->redirect($this->generateUrl('purchase_edit', array('id' => $id)));
         }
 
         return array(
@@ -203,9 +211,9 @@ class MovieController extends Controller
         );
     }
     /**
-     * Deletes a Movie entity.
+     * Deletes a Purchase entity.
      *
-     * @Route("/{id}", name="_delete")
+     * @Route("/{id}", name="purchase_delete")
      * @Method("DELETE")
      */
     public function deleteAction(Request $request, $id)
@@ -215,21 +223,21 @@ class MovieController extends Controller
 
         if ($form->isValid()) {
             $em = $this->getDoctrine()->getManager();
-            $entity = $em->getRepository('AppBundle:Movie')->find($id);
+            $entity = $em->getRepository('AppBundle:Purchase')->find($id);
 
             if (!$entity) {
-                throw $this->createNotFoundException('Unable to find Movie entity.');
+                throw $this->createNotFoundException('Unable to find Purchase entity.');
             }
 
             $em->remove($entity);
             $em->flush();
         }
 
-        return $this->redirect($this->generateUrl(''));
+        return $this->redirect($this->generateUrl('purchase'));
     }
 
     /**
-     * Creates a form to delete a Movie entity by id.
+     * Creates a form to delete a Purchase entity by id.
      *
      * @param mixed $id The entity id
      *
@@ -238,7 +246,7 @@ class MovieController extends Controller
     private function createDeleteForm($id)
     {
         return $this->createFormBuilder()
-            ->setAction($this->generateUrl('_delete', array('id' => $id)))
+            ->setAction($this->generateUrl('purchase_delete', array('id' => $id)))
             ->setMethod('DELETE')
             ->add('submit', 'submit', array('label' => 'Delete'))
             ->getForm()

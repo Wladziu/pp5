@@ -2,7 +2,7 @@
 
 {% block body -%}
     <div class="contentTitle"> <h1>Lista filmów</h1> </div>
-
+    <hr style="margin-left : 12px; margin-right:12px">
         {% for entity in entities %}
             <div class="contentTitle"><h1>{{ entity.title }}</h1></div>
             <div class="contentText">
@@ -11,10 +11,10 @@
                     <p>Opis: {{ entity.description}}</p>
                     <p>Cena: {{ entity.price }}</p>
                     <p>Dodane dnia: {% if entity.date %}{{ entity.date|date('Y-m-d H:i:s') }}{% endif %}</p>
-                    <p><a>Zakup</a></p>
+                    <p><a href="{{path('purchase_new', {id:entity.id})}}">Zakup</a></p>
                 </div>
             </div>
-
+        <hr style="margin-left : 12px; margin-right:12px">
         {% endfor %}
   
     {% endblock %}

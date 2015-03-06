@@ -1,0 +1,32 @@
+{% extends '::base.html.twig' %}
+
+{% block body -%}
+    <div class="contentTitle"><h1>Zakupileś film!</h1></div>
+<hr style="margin-left : 12px; margin-right:12px">
+  <div class="contentText">
+    <table class="record_properties" style="text-align:left">
+        <tbody>
+            <tr>
+                <th>Id zakupu</th>
+                <td>{{ entity.id }}</td>
+            </tr>
+            <tr>
+                <th>Imię i nazwisko</th>
+                <td>{{ entity.username }}</td>
+            </tr>
+            <tr>
+                <th>Email dostarczenia</th>
+                <td>{{ entity.email }}</td>
+            </tr>
+            <tr>
+                <th>Tytuł filmu</th>
+                <td>{{ entity.movietitle }}</td>
+            </tr>
+            <tr>
+                <th>Data transakcji</th>
+                <td>{{ entity.date|date('Y-m-d H:i:s') }}</td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+{% endblock %}

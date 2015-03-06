@@ -59,6 +59,10 @@ class Purchase
     {
         return $this->id;
     }
+    function __construct()
+    {
+        $this->date = new \DateTime();
+    }
 
     /**
      * Set username
