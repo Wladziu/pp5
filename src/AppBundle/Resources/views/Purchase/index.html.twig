@@ -1,8 +1,9 @@
 {% extends '::base.html.twig' %}
 
 {% block body -%}
-    <h1>Purchase list</h1>
-
+    <div class="contentTitle"><h1>Lista transakcji</h1></div>
+<hr style="margin-left : 12px; margin-right:12px">
+  <div class="contentText">
     <table class="records_list">
         <thead>
             <tr>
@@ -11,7 +12,6 @@
                 <th>Email</th>
                 <th>Movietitle</th>
                 <th>Date</th>
-                <th>Actions</th>
             </tr>
         </thead>
         <tbody>
@@ -23,25 +23,11 @@
                 <td>{{ entity.movietitle }}</td>
                 <td>{% if entity.date %}{{ entity.date|date('Y-m-d H:i:s') }}{% endif %}</td>
                 <td>
-                <ul>
-                    <li>
-                        <a href="{{ path('purchase_show', { 'id': entity.id }) }}">show</a>
-                    </li>
-                    <li>
-                        <a href="{{ path('purchase_edit', { 'id': entity.id }) }}">edit</a>
-                    </li>
-                </ul>
+
                 </td>
             </tr>
         {% endfor %}
         </tbody>
     </table>
-
-        <ul>
-        <li>
-            <a href="{{ path('purchase_new', {id:0}) }}">
-                Create a new entry
-            </a>
-        </li>
-    </ul>
+</div>
     {% endblock %}
